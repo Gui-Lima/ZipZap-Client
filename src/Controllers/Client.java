@@ -3,7 +3,8 @@ package Controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import jdk.net.SocketFlow;
+import Client.Connection;
+import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -16,16 +17,18 @@ public class Client {
     Label StatusLabel;
     @FXML
     Button StartChatButton;
-    private Socket socket;
+    @FXML
+    TextField PortTextField;
 
-    static final int SERVER_ADDRESS = 9000;
+    private Connection connection;
 
     private void connectToServer() throws IOException {
-        socket = new Socket("localhost", SERVER_ADDRESS);
+        connection = new Connection();
+        connection.connectToServer();
     }
 
     private void disconnectToServer() throws IOException {
-        socket.close();
+        connection.disconnectFromServer();
     }
 
     public void handleConnectButton(){
@@ -60,10 +63,17 @@ public class Client {
     }
 
     public void handleStartButton(){
-
+        if(StartChatButton.getOpacity() == 1.0){
+            String port = PortTextField.getText();
+            connectToUser(Integer.valueOf(port));
+        }
     }
 
-    private void connectToUser(){
-
+    private void connectToUser(int port){
+        try {
+            connection.stablishConnectionToUser(port);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
