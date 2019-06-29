@@ -64,7 +64,7 @@ public class Client {
         if(StartChatButton.getOpacity() == 1.0){
             String port = PortTextField.getText();
             if (connectToUser(Integer.valueOf(port))){
-                Chat chat = new Chat();
+                Chat chat = new Chat(this.connection);
                 chat.display();
             }
 

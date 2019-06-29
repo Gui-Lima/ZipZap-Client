@@ -18,8 +18,8 @@
           </font>
         </Label>
             <ListView layoutY="-1.0" prefHeight="345.0" prefWidth="640.0" />
-            <TextField layoutX="7.0" layoutY="342.0" prefHeight="26.0" prefWidth="565.0" />
-            <Button layoutX="572.0" layoutY="345.0" mnemonicParsing="false" text="Send" />
+            <TextField fx:id="MessageTextField" layoutX="7.0" layoutY="342.0" prefHeight="26.0" prefWidth="565.0" />
+            <Button fx:id="SendMessageToUserButton" layoutX="572.0" layoutY="345.0" mnemonicParsing="false" text="Send" onAction="#handleSendMessageToUserButton" />
       </children>
     </AnchorPane>
   </children>
