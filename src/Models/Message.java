@@ -29,6 +29,7 @@ public class Message {
         this.text = arr[3];
     }
 
+    @Override
     public String toString() {
         StringBuilder message = new StringBuilder();
         message.append(this.fromIP).append("||").append(this.toIP).append("||").append(this.text);

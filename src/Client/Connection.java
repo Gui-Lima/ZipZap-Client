@@ -1,17 +1,15 @@
 package Client;
 
+import Models.Message;
 import jdk.internal.util.xml.impl.Input;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
 public class Connection {
     static final int SERVER_ADDRESS = 9000;
     private Socket socket;
-    private InputStream input;
+    private DataInputStream input;
     private DataOutputStream output;
 
     public void connectToServer() throws IOException {
@@ -22,18 +20,25 @@ public class Connection {
         socket.close();
     }
 
-    public void stablishConnectionToUser(int port) throws IOException {
-        input  = socket.getInputStream();
+    public boolean stablishConnectionToUser(int port) throws IOException {
+        input  = new DataInputStream(socket.getInputStream());
         output = new DataOutputStream(socket.getOutputStream());
         String message = String.valueOf(port);
         output.writeUTF(message);
+        String result = input.readUTF();
+        System.out.println(result);
+        if(result.equals(String.valueOf(port))){
+            return true;
+        }
+        return false;
     }
 
-    public void sendMessageToUsaer() throws IOException{
-
+    public void sendMessageToUser(Message messsage) throws IOException{
+        //output.writeUTF(message.toString());
     }
 
     public void finishConnectionToUser() throws IOException{
-        
+        input.close();
+        output.close();
     }
 }

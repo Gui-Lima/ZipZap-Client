@@ -7,8 +7,6 @@ import Client.Connection;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
-import java.net.Socket;
-import java.util.Random;
 
 public class Client {
     @FXML
@@ -65,15 +63,20 @@ public class Client {
     public void handleStartButton(){
         if(StartChatButton.getOpacity() == 1.0){
             String port = PortTextField.getText();
-            connectToUser(Integer.valueOf(port));
+            if (connectToUser(Integer.valueOf(port))){
+                Chat chat = new Chat();
+                chat.display();
+            }
+
         }
     }
 
-    private void connectToUser(int port){
+    private boolean connectToUser(int port){
         try {
-            connection.stablishConnectionToUser(port);
+            return connection.stablishConnectionToUser(port);
         } catch (Exception e){
             e.printStackTrace();
         }
+        return false;
     }
 }
