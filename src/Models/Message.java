@@ -23,6 +23,7 @@ public class Message {
         this.text = arr[3];
     }
 
+    @Override
     public String toString() {
         StringBuilder message = new StringBuilder();
         message.append(this.type.toString()).append("||")
