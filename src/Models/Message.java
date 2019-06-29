@@ -13,7 +13,21 @@ public class Message {
     private String fromIP;
     public Type type;
 
-    public Message() {}
+    public Message(String text, String toIP, String fromIP, Type type) {
+        this.text = text;
+        this.toIP = toIP;
+        this.fromIP = fromIP;
+        this.type = type;
+    }
+
+    public Message(String encryp) {
+        String[] arr = encryp.split("||");
+
+        this.type = Type.valueOf(arr[0]);
+        this.fromIP = arr[1];
+        this.toIP = arr[2];
+        this.text = arr[3];
+    }
 
     public String toString() {
         StringBuilder message = new StringBuilder();
