@@ -16,11 +16,11 @@ public class Connection {
         socket = new Socket("localhost", SERVER_ADDRESS);
     }
 
-    public void disconnectFromServer() throws IOException{
+    public void disconnectFromServer() throws IOException {
         socket.close();
     }
 
-    public boolean stablishConnectionToUser(int port) throws IOException {
+    public boolean establishConnectionToUser(int port) throws IOException {
         input  = new DataInputStream(socket.getInputStream());
         output = new DataOutputStream(socket.getOutputStream());
         String message = String.valueOf(port);

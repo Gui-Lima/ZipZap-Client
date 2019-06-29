@@ -73,7 +73,7 @@ public class Client {
 
     private boolean connectToUser(int port){
         try {
-            return connection.stablishConnectionToUser(port);
+            return connection.establishConnectionToUser(port);
         } catch (Exception e){
             e.printStackTrace();
         }

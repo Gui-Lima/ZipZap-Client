@@ -2,7 +2,7 @@ package Models;
 
 public class Message {
 
-    public Type type;
+    private Type type;
     private String fromPort;
     private String toPort;
     private String text;
@@ -15,7 +15,7 @@ public class Message {
     }
 
     public Message(String encrypt) {
-        String[] arr = encrypt.split("||");
+        String[] arr = encrypt.split("<=>");
 
         this.type = Type.valueOf(arr[0]);
         this.fromPort = arr[1];
@@ -26,9 +26,9 @@ public class Message {
     @Override
     public String toString() {
         StringBuilder message = new StringBuilder();
-        message.append(this.type.toString()).append("||")
-                .append(this.fromPort).append("||")
-                .append(this.toPort).append("||")
+        message.append(this.type.toString()).append("<=>")
+                .append(this.fromPort).append("<=>")
+                .append(this.toPort).append("<=>")
                 .append(this.text);
         return message.toString();
     }
