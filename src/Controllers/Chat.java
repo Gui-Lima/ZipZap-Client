@@ -3,6 +3,7 @@ package Controllers;
 import Models.Message;
 import Models.Type;
 import Client.Connection;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,23 +25,6 @@ public class Chat{
     static final String pathToChat = "../Resources/Chat.fxml";
     private Connection connection;
 
-    public Chat(Connection connection) {
-        this.connection = connection;
-    }
-
-    public void display(){
-        try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(pathToChat));
-            Parent root = (Parent) loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Chat");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
     public void handleSendMessageToUserButton() {
         String msg = MessageTextField.getText();
         Message message = new Message(msg, this.connection.getToPort(), this.connection.getFromPort(), Type.MESSAGE);
@@ -51,4 +35,10 @@ public class Chat{
         }
 
     }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
+
 }
