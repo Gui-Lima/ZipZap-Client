@@ -116,8 +116,8 @@ public class Client implements Observer {
         Parent root = (Parent)fxmlLoader.load();
         Chat chat = fxmlLoader.<Chat>getController();
         chat.setConnection(this.connection);
-        if(chatStatus.containsKey(Integer.valueOf(this.connection.getFromPort()))){
-            chat.setMessages(this.chatStatus.get(Integer.valueOf(connection.getFromPort())));
+        if(chatStatus.containsKey(this.connection.getFromPort())){
+            chat.setMessages(this.chatStatus.get(connection.getFromPort()));
         }
         connection.addListener(chat);
         Scene scene = new Scene(root);
@@ -127,13 +127,15 @@ public class Client implements Observer {
     }
 
     @Override
-    public void notifyChanged() {
-        System.out.println("oi amigo");
+    public void notifyConnectionEstablished(int port) {
+        this.eventos.add("You are connected to: " + port );
+        ObservableList<String> evt = FXCollections.observableArrayList(this.eventos);
+        LatestMessagesListView.setItems(evt);
     }
 
     @Override
-    public void notifyUserConnected(int socket) {
-        this.eventos.add("This User Connected to you: " + socket );
+    public void notifyUserConnected(int port) {
+        this.eventos.add("This User Connected to you: " + port );
         ObservableList<String> evt = FXCollections.observableArrayList(this.eventos);
         LatestMessagesListView.setItems(evt);
     }

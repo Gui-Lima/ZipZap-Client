@@ -1,7 +1,8 @@
 package Models;
 
 public enum Type {
-    CONNECT,
+    CONNECT_TO,
+    RECEIVE_CONNECTION,
     MESSAGE,
     NOTIFICATION,
     FINISH

@@ -3,9 +3,9 @@ package Interfaces;
 import Models.Message;
 
 public interface Observer {
-    void notifyChanged();
+    void notifyConnectionEstablished(int port);
 
-    void notifyUserConnected(int socket);
+    void notifyUserConnected(int port);
 
     void notifyMessageReceived(Message message);
 }

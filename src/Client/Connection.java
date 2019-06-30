@@ -40,7 +40,7 @@ public class Connection {
     public void establishConnectionToUser(int port) throws IOException {
         output = new DataOutputStream(socket.getOutputStream());
         this.toPort = port;
-        Message message = new Message(Type.CONNECT, Status.NOT_SENT, this.fromPort, this.toPort, "connecting");
+        Message message = new Message(Type.CONNECT_TO, Status.NOT_SENT, this.fromPort, this.toPort, "connecting");
         output.writeUTF(message.toString());
         notifySomethingHappened(message);
     }
@@ -57,12 +57,15 @@ public class Connection {
         listeners.add(observer);
     }
 
-    void notifySomethingHappened(Message message){
-        for(Observer observer : listeners){
-            if(message.getType() == Type.CONNECT){
+    void notifySomethingHappened(Message message) {
+        for(Observer observer : listeners) {
+            if(message.getType() == Type.CONNECT_TO) {
+                observer.notifyConnectionEstablished(message.getToPort());
+            }
+            else if(message.getType()== Type.RECEIVE_CONNECTION) {
                 observer.notifyUserConnected(message.getFromPort());
             }
-            if(message.getType() == Type.MESSAGE){
+            else if(message.getType() == Type.MESSAGE) {
                 observer.notifyMessageReceived(message);
             }
         }

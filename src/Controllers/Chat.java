@@ -52,12 +52,12 @@ public class Chat implements Observer {
     }
 
     @Override
-    public void notifyChanged() {
-        System.out.println("algo mudou");
+    public void notifyConnectionEstablished(int port) {
+        //System.out.println("algo mudou");
     }
 
     @Override
-    public void notifyUserConnected(int socket) {
+    public void notifyUserConnected(int port) {
 
     }
 
