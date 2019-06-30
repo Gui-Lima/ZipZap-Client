@@ -26,6 +26,7 @@ public void handleSendMessageToUserButton() {
         Message message = new Message(msg, this.connection.getToPort(), this.connection.getFromPort(), Type.MESSAGE);
         try {
             this.connection.sendMessageToUser(message);
+            MessageTextField.clear();
         } catch (Exception e) {
             e.printStackTrace();
         }
