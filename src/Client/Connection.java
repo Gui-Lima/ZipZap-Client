@@ -34,7 +34,7 @@ public class Connection {
         this.toPort = port;
         input  = new DataInputStream(socket.getInputStream());
         output = new DataOutputStream(socket.getOutputStream());
-        Message message = new Message("aaa", String.valueOf(port), String.valueOf(socket.getPort()), Type.CONNECT);
+        Message message = new Message("connecting", String.valueOf(port), String.valueOf(socket.getPort()), Type.CONNECT);
         output.writeUTF(message.toString());
     }
 
