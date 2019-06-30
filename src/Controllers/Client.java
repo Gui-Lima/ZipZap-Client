@@ -127,19 +127,14 @@ public class Client implements Observer {
         Parent root = (Parent)fxmlLoader.load();
         Chat chat = fxmlLoader.<Chat>getController();
         chat.setConnection(this.connection);
-        System.out.println ("aqui ó " + this.connection.getFromPort());
-        this.printmap();
         if(this.chatStatus.containsKey(this.connection.getToPort())){
-            System.out.println("entrou no bagui");
-            chat.setMessages(this.chatStatus.get(connection.getFromPort()));
+            chat.setMessages(this.chatStatus.get(connection.getToPort()));
         }
         connection.addListener(chat);
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
-
         stage.show();
-
     }
 
     @Override
@@ -158,15 +153,20 @@ public class Client implements Observer {
 
     @Override
     public void notifyMessageReceived(Message message) {
-        System.out.println ("mensagem legal : " + message);
+        System.out.println ("The message was " + message);
+        System.out.println("I'm adding it to the message queue of the client");
         if(!chatStatus.containsKey(message.getFromPort())){
+            System.out.println("Creating a new Queue since it's the first message to the client from the user");
             ArrayList<Message> messages = new ArrayList<>();
             messages.add(message);
             this.chatStatus.put(message.getFromPort(), messages);
         }
         else{
+            System.out.println("Appending to the existing messages:");
             ArrayList<Message> messages = this.chatStatus.get(message.getFromPort());
+            messages.add(message);
             this.chatStatus.replace(message.getFromPort(), messages);
+            this.printmap();
         }
     }
 }

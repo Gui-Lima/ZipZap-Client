@@ -58,14 +58,18 @@ public class Connection {
     }
 
     void notifySomethingHappened(Message message) {
+        System.out.println("Something happened!");
         for(Observer observer : listeners) {
             if(message.getType() == Type.CONNECT_TO) {
+                System.out.println(" It was a connection tryout");
                 observer.notifyConnectionEstablished(message.getToPort());
             }
             else if(message.getType()== Type.RECEIVE_CONNECTION) {
+                System.out.println(" It was a Connection tryout reciever");
                 observer.notifyUserConnected(message.getFromPort());
             }
             else if(message.getType() == Type.MESSAGE) {
+                System.out.println(" It was a Message to" + observer.toString());
                 observer.notifyMessageReceived(message);
             }
         }

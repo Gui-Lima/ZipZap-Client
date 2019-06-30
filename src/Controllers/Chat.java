@@ -12,9 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class Chat implements Observer {
@@ -64,6 +62,7 @@ public class Chat implements Observer {
     @Override
     public void notifyMessageReceived(Message message) {
         this.messages.add(message);
+        updateMessageList();
     }
 
     public void updateMessageList(){
@@ -71,7 +70,12 @@ public class Chat implements Observer {
         MessagesListView.setItems(evt);
     }
 
-    public void initialize(){
-        this.updateMessageList();
+    @FXML private void initialize(){
+
+        Platform.runLater(() ->{
+            System.out.println("Iniciando a tela do chat");
+            this.updateMessageList();
+
+        });
     }
 }
