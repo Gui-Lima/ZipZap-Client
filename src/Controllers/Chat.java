@@ -11,9 +11,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javax.annotation.Resource;
-import java.awt.*;
-import java.io.IOException;
 
 
 public class Chat{
@@ -22,11 +19,10 @@ public class Chat{
     @FXML
     TextField MessageTextField;
 
-    static final String pathToChat = "../Resources/Chat.fxml";
     private Connection connection;
 
-    public void handleSendMessageToUserButton() {
-        String msg = MessageTextField.getText();
+public void handleSendMessageToUserButton() {
+        String msg = this.MessageTextField.getText();
         Message message = new Message(msg, this.connection.getToPort(), this.connection.getFromPort(), Type.MESSAGE);
         try {
             this.connection.sendMessageToUser(message);

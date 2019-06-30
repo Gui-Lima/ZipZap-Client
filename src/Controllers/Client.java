@@ -23,6 +23,7 @@ public class Client {
     TextField PortTextField;
     @FXML
     Label NumeroPorta;
+    static final String pathToChat = "../Resources/Chat.fxml";
 
     private Connection connection;
 
@@ -65,13 +66,12 @@ public class Client {
         }
     }
     public void changePort() {
-//colocar connection.getFromPort()
-         NumeroPorta.setText("EXEMPLO");
+         NumeroPorta.setText(connection.getFromPort());
     }
 
     public void portAndConnect() {
-        changePort();
         handleConnectButton();
+        changePort();
     }
 
     public void handleStartButton() {
@@ -99,12 +99,10 @@ public class Client {
 
     private void createChat () throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../Resources/Chat.fxml"));
-
         Parent root = (Parent)fxmlLoader.load();
         Chat chat = fxmlLoader.<Chat>getController();
         chat.setConnection(this.connection);
         Scene scene = new Scene(root);
-
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();

@@ -2,8 +2,6 @@ package Client;
 
 import Models.Message;
 import Models.Type;
-import jdk.internal.util.xml.impl.Input;
-
 import java.io.*;
 import java.net.Socket;
 
@@ -25,6 +23,7 @@ public class Connection {
 
     public void connectToServer() throws IOException {
         socket = new Socket("localhost", SERVER_ADDRESS);
+        this.fromPort = socket.getLocalPort();
     }
 
     public void disconnectFromServer() throws IOException {
@@ -32,18 +31,19 @@ public class Connection {
     }
 
     public void establishConnectionToUser(int port) throws IOException {
+        this.toPort = port;
         input  = new DataInputStream(socket.getInputStream());
         output = new DataOutputStream(socket.getOutputStream());
-
-        Message message = new Message("", String.valueOf(port), String.valueOf(socket.getPort()), Type.CONNECT);
+        Message message = new Message("aaa", String.valueOf(port), String.valueOf(socket.getPort()), Type.CONNECT);
         output.writeUTF(message.toString());
-
-
-
     }
 
     public void sendMessageToUser(Message message) throws IOException{
         output.writeUTF(message.toString());
+    }
+
+    public void recieveMessageFromUser() throws IOException {
+        System.out.println(input.readUTF());
     }
 
     public void finishConnectionToUser() throws IOException{
