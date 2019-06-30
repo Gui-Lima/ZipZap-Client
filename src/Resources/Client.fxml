@@ -64,7 +64,7 @@
             <TextField fx:id="PortTextField" layoutX="7.0" layoutY="123.0" promptText="IP Adress..." />
             <Button fx:id="StartChatButton" layoutX="62.0" layoutY="152.0" mnemonicParsing="false" onAction="#handleStartButton" opacity="0.40" text="Start" />
             <Label fx:id="StatusLabel" layoutX="517.0" layoutY="11.0" text="Disconnected" />
-            <Label fx:id="NumeroPorta" layoutX="520.0" layoutY="56.0" text="." />
+            <Label fx:id="PortNumber" layoutX="520.0" layoutY="56.0" text="." />
             <Label layoutX="446.0" layoutY="56.0" text="Your Port:" />
       </children>
     </AnchorPane>

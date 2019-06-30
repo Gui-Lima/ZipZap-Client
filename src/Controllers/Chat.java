@@ -1,6 +1,7 @@
 package Controllers;
 
 import Models.Message;
+import Models.Status;
 import Models.Type;
 import Client.Connection;
 import javafx.application.Platform;
@@ -23,19 +24,17 @@ public class Chat{
 
 public void handleSendMessageToUserButton() {
         String msg = this.MessageTextField.getText();
-        Message message = new Message(msg, this.connection.getToPort(), this.connection.getFromPort(), Type.MESSAGE);
+        Message message = new Message(Type.MESSAGE, Status.NOT_SENT,
+                this.connection.getFromPort(), this.connection.getToPort(), msg);
         try {
             this.connection.sendMessageToUser(message);
             MessageTextField.clear();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
-
-
 }
