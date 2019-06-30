@@ -31,21 +31,13 @@ public class Connection {
         socket.close();
     }
 
-    public boolean establishConnectionToUser(int port) throws IOException {
+    public void establishConnectionToUser(int port) throws IOException {
         input  = new DataInputStream(socket.getInputStream());
         output = new DataOutputStream(socket.getOutputStream());
 
         Message message = new Message("", String.valueOf(port), String.valueOf(socket.getPort()), Type.CONNECT);
         output.writeUTF(message.toString());
 
-        String result = input.readUTF();
-        System.out.println(result);
-        if(result.equals(String.valueOf(port))){
-            this.toPort = port;
-            this.fromPort = socket.getPort();
-            return true;
-        }
-        return false;
     }
 
     public void sendMessageToUser(Message message) throws IOException{
