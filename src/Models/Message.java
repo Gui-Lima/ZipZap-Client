@@ -3,12 +3,14 @@ package Models;
 public class Message {
 
     private Type type;
-    private String fromPort;
-    private String toPort;
+    private Status status;
+    private int fromPort;
+    private int toPort;
     private String text;
 
-    public Message(String text, String toPort, String fromPort, Type type) {
+    public Message(Type type, Status status, int fromPort, int toPort, String text) {
         this.type = type;
+        this.status = status;
         this.fromPort = fromPort;
         this.toPort = toPort;
         this.text = text;
@@ -18,15 +20,17 @@ public class Message {
         String[] arr = encrypt.split("<=>");
 
         this.type = Type.valueOf(arr[0]);
-        this.fromPort = arr[1];
-        this.toPort = arr[2];
-        this.text = arr[3];
+        this.status = Status.valueOf(arr[1]);
+        this.fromPort = Integer.parseInt(arr[2]);
+        this.toPort = Integer.parseInt(arr[3]);
+        this.text = arr[4];
     }
 
     @Override
     public String toString() {
         StringBuilder message = new StringBuilder();
         message.append(this.type.toString()).append("<=>")
+                .append(this.status.toString()).append("<=>")
                 .append(this.fromPort).append("<=>")
                 .append(this.toPort).append("<=>")
                 .append(this.text);
@@ -38,15 +42,19 @@ public class Message {
     }
 
     public void setToPort(int port) {
-        this.toPort = Integer.toString(port);
+        this.toPort = port;
     }
 
     public void setFromPort(int port) {
-        this.fromPort = Integer.toString(port);
+        this.fromPort = port;
     }
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public String getText() {
@@ -54,14 +62,18 @@ public class Message {
     }
 
     public int getToPort() {
-        return Integer.parseInt(this.toPort);
+        return this.toPort;
     }
 
     public int getFromPort() {
-        return Integer.parseInt(this.fromPort);
+        return this.fromPort;
     }
 
     public Type getType() {
         return this.type;
+    }
+
+    public Status getStatus() {
+        return this.status;
     }
 }

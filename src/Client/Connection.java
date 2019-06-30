@@ -1,6 +1,7 @@
 package Client;
 
 import Models.Message;
+import Models.Status;
 import Models.Type;
 import java.io.*;
 import java.net.Socket;
@@ -12,12 +13,12 @@ public class Connection {
     private int toPort;
     private int fromPort;
 
-    public String getToPort() {
-        return String.valueOf(this.toPort);
+    public int getToPort() {
+        return this.toPort;
     }
 
-    public String getFromPort() {
-        return String.valueOf(this.fromPort);
+    public int getFromPort() {
+        return this.fromPort;
     }
 
     public void connectToServer() throws IOException {
@@ -35,7 +36,7 @@ public class Connection {
     public void establishConnectionToUser(int port) throws IOException {
         this.toPort = port;
         output = new DataOutputStream(socket.getOutputStream());
-        Message message = new Message("connecting", String.valueOf(port), String.valueOf(socket.getPort()), Type.CONNECT);
+        Message message = new Message(Type.CONNECT, Status.NOT_SENT, this.fromPort, this.toPort, "connecting");
         output.writeUTF(message.toString());
     }
 

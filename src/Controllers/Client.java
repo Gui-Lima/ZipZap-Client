@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import Client.Connection;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class Client {
@@ -22,7 +21,7 @@ public class Client {
     @FXML
     TextField PortTextField;
     @FXML
-    Label NumeroPorta;
+    Label PortNumber;
     static final String pathToChat = "../Resources/Chat.fxml";
 
     private Connection connection;
@@ -66,7 +65,7 @@ public class Client {
         }
     }
     public void changePort() {
-         NumeroPorta.setText(connection.getFromPort());
+         PortNumber.setText(String.valueOf(connection.getFromPort()));
     }
 
     public void portAndConnect() {
