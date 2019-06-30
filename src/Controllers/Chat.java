@@ -5,6 +5,7 @@ import Models.Message;
 import Models.Status;
 import Models.Type;
 import Client.Connection;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -69,4 +70,5 @@ public class Chat implements Observer {
         ObservableList<Message> evt = FXCollections.observableArrayList(this.messages);
         MessagesListView.setItems(evt);
     }
+
 }

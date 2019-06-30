@@ -124,7 +124,6 @@ public class Client implements Observer {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
-        chat.updateMessageList();
     }
 
     @Override
