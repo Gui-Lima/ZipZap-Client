@@ -17,6 +17,8 @@ public class Client {
     Button StartChatButton;
     @FXML
     TextField PortTextField;
+    @FXML
+    Label numeroPorta;
 
     private Connection connection;
 
@@ -58,6 +60,8 @@ public class Client {
             }
         }
 
+    }
+    public void changePort() {
     }
 
     public void handleStartButton(){
