@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -11,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Client">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Client">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -66,6 +67,8 @@
             <Label fx:id="StatusLabel" layoutX="517.0" layoutY="11.0" text="Disconnected" />
             <Label fx:id="PortNumber" layoutX="520.0" layoutY="56.0" text="." />
             <Label layoutX="446.0" layoutY="56.0" text="Your Port:" />
+            <ListView fx:id="LatestMessagesListView" layoutX="428.0" layoutY="158.0" prefHeight="200.0" prefWidth="200.0" />
+            <Label alignment="CENTER" layoutX="429.0" layoutY="139.0" prefHeight="16.0" prefWidth="200.0" text="Latest Messages" />
       </children>
     </AnchorPane>
   </children>

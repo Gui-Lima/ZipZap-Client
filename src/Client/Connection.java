@@ -1,10 +1,12 @@
 package Client;
 
+import Interfaces.Observer;
 import Models.Message;
 import Models.Status;
 import Models.Type;
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Connection {
     static final int SERVER_ADDRESS = 9000;
@@ -12,6 +14,8 @@ public class Connection {
     private DataOutputStream output;
     private int toPort;
     private int fromPort;
+    private ArrayList<Observer> listeners = new ArrayList<Observer>();
+
 
     public int getToPort() {
         return this.toPort;
@@ -25,7 +29,7 @@ public class Connection {
         socket = new Socket("localhost", SERVER_ADDRESS);
         this.fromPort = socket.getLocalPort();
         this.output = new DataOutputStream(socket.getOutputStream());
-        Connection_Receiver receiver = new Connection_Receiver(socket);
+        Connection_Receiver receiver = new Connection_Receiver(socket, this);
         new Thread(receiver).start();
     }
 
@@ -34,10 +38,11 @@ public class Connection {
     }
 
     public void establishConnectionToUser(int port) throws IOException {
-        this.toPort = port;
         output = new DataOutputStream(socket.getOutputStream());
         Message message = new Message(Type.CONNECT, Status.NOT_SENT, this.fromPort, this.toPort, "connecting");
+        this.toPort = port;
         output.writeUTF(message.toString());
+        notifySomethingHappened(message);
     }
 
     public void sendMessageToUser(Message message) throws IOException{
@@ -47,4 +52,20 @@ public class Connection {
     public void finishConnectionToUser() throws IOException{
         output.close();
     }
+
+    public void addListener(Observer observer) {
+        listeners.add(observer);
+    }
+
+    void notifySomethingHappened(Message message){
+        for(Observer observer : listeners){
+            if(message.getType() == Type.CONNECT){
+                observer.notifyUserConnected(message.getFromPort());
+            }
+            if(message.getType() == Type.MESSAGE){
+                observer.notifyMessageReceived(message);
+            }
+        }
+    }
+
 }
