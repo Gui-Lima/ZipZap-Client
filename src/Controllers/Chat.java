@@ -71,4 +71,7 @@ public class Chat implements Observer {
         MessagesListView.setItems(evt);
     }
 
+    public void initialize(){
+        this.updateMessageList();
+    }
 }

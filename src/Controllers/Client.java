@@ -4,6 +4,7 @@ import Interfaces.Observer;
 import Models.Message;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,6 +15,8 @@ import Client.Connection;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,19 +114,32 @@ public class Client implements Observer {
         return false;
     }
 
+    public void printmap(){
+        for(Integer i : this.chatStatus.keySet()){
+            System.out.println(i);
+            for (Message m : this.chatStatus.get(i)){
+                System.out.println(m);
+            }
+        }
+    }
     private void createChat () throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(pathToChat));
         Parent root = (Parent)fxmlLoader.load();
         Chat chat = fxmlLoader.<Chat>getController();
         chat.setConnection(this.connection);
-        if(chatStatus.containsKey(this.connection.getFromPort())){
+        System.out.println ("aqui ó " + this.connection.getFromPort());
+        this.printmap();
+        if(this.chatStatus.containsKey(this.connection.getToPort())){
+            System.out.println("entrou no bagui");
             chat.setMessages(this.chatStatus.get(connection.getFromPort()));
         }
         connection.addListener(chat);
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
+
         stage.show();
+
     }
 
     @Override
@@ -142,6 +158,7 @@ public class Client implements Observer {
 
     @Override
     public void notifyMessageReceived(Message message) {
+        System.out.println ("mensagem legal : " + message);
         if(!chatStatus.containsKey(message.getFromPort())){
             ArrayList<Message> messages = new ArrayList<>();
             messages.add(message);

@@ -17,6 +17,8 @@ public class Connection_Receiver implements Runnable {
     private boolean stopped = false;
     private DataInputStream input;
     private DataOutputStream output;
+    protected Thread runningThread = null;
+
 
     public Connection_Receiver(Socket clientSocket, Connection connection) throws IOException {
         this.connection = connection;
@@ -27,6 +29,10 @@ public class Connection_Receiver implements Runnable {
 
     @Override
     public void run() {
+        Connection_Receiver connection_receiver = this;
+        synchronized (connection_receiver) {
+            this.runningThread = Thread.currentThread();
+        }
         while(!stopped){
             try {
                 String me = this.input.readUTF();
