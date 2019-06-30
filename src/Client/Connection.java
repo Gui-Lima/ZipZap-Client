@@ -38,6 +38,8 @@ public class Connection {
         Message message = new Message("", String.valueOf(port), String.valueOf(socket.getPort()), Type.CONNECT);
         output.writeUTF(message.toString());
 
+
+
     }
 
     public void sendMessageToUser(Message message) throws IOException{

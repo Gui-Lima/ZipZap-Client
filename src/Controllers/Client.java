@@ -22,7 +22,7 @@ public class Client {
     @FXML
     TextField PortTextField;
     @FXML
-    Label numeroPorta;
+    Label NumeroPorta;
 
     private Connection connection;
 
@@ -65,6 +65,13 @@ public class Client {
         }
     }
     public void changePort() {
+//colocar connection.getFromPort()
+         NumeroPorta.setText("EXEMPLO");
+    }
+
+    public void portAndConnect() {
+        changePort();
+        handleConnectButton();
     }
 
     public void handleStartButton() {
