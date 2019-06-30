@@ -35,7 +35,7 @@ public class Connection {
     public void establishConnectionToUser(int port) throws IOException {
         this.toPort = port;
         output = new DataOutputStream(socket.getOutputStream());
-        Message message = new Message("aaa", String.valueOf(port), String.valueOf(socket.getPort()), Type.CONNECT);
+        Message message = new Message("connecting", String.valueOf(port), String.valueOf(socket.getPort()), Type.CONNECT);
         output.writeUTF(message.toString());
     }
 
