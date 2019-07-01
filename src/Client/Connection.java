@@ -80,6 +80,10 @@ public class Connection {
                 System.out.println("It was a deletion, wow ");
                 observer.notifyMessageDeletion(message);
             }
+            else if(message.getType() == Type.STATUS_UPDATE){
+                System.out.println("We received a status update");
+                observer.notifyStatusUpdate(message);
+            }
         }
     }
 

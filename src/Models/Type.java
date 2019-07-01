@@ -5,6 +5,7 @@ public enum Type{
     CONNECT_TO,
     RECEIVE_CONNECTION,
     MESSAGE_SEND,
+    STATUS_UPDATE,
     NOTIFICATION,
     FINISH
 }

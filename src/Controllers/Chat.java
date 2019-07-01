@@ -105,6 +105,21 @@ public class Chat implements Observer {
     }
 
     @Override
+    public void notifyStatusUpdate(Message message) {
+        this.printChat();
+        int i =0;
+        for (Message m : this.messages){
+            if (m.getId() == message.getId()){
+                break;
+            }
+            i++;
+        }
+        this.messages.set(i, message);
+        this.printChat();
+        updateMessageList();
+    }
+
+    @Override
     public void notifyMessageReceived(Message message) {
         this.messages.add(message);
         this.printChat();

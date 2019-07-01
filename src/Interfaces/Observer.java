@@ -10,4 +10,6 @@ public interface Observer {
     void notifyMessageReceived(Message message);
 
     void notifyMessageDeletion(Message message);
+
+    void notifyStatusUpdate(Message message);
 }
