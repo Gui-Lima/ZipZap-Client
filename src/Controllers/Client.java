@@ -2,9 +2,9 @@ package Controllers;
 
 import Interfaces.Observer;
 import Models.Message;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,12 +15,10 @@ import Client.Connection;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Client implements Observer {
     @FXML
@@ -82,13 +80,14 @@ public class Client implements Observer {
             }
         }
     }
-    public void changePort() {
+
+    public void setPortNumberLabel() {
          PortNumber.setText(String.valueOf(connection.getFromPort()));
     }
 
     public void portAndConnect() {
         handleConnectButton();
-        changePort();
+        setPortNumberLabel();
     }
 
     public void handleStartButton() {
@@ -122,6 +121,7 @@ public class Client implements Observer {
             }
         }
     }
+
     private void createChat () throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(pathToChat));
         Parent root = (Parent)fxmlLoader.load();
@@ -146,9 +146,13 @@ public class Client implements Observer {
 
     @Override
     public void notifyUserConnected(int port) {
-        this.eventos.add("This User Connected to you: " + port );
-        ObservableList<String> evt = FXCollections.observableArrayList(this.eventos);
-        LatestMessagesListView.setItems(evt);
+        Platform.runLater(
+                () -> {
+                    this.eventos.add("This User Connected to you: " + port );
+                    ObservableList<String> evt = FXCollections.observableArrayList(this.eventos);
+                    LatestMessagesListView.setItems(evt);
+                }
+        );
     }
 
     @Override
@@ -171,7 +175,6 @@ public class Client implements Observer {
             ArrayList<Message> messages = this.chatStatus.get(message.getFromPort());
             messages.add(message);
             this.chatStatus.replace(message.getFromPort(), messages);
-            this.printmap();
         }
     }
 }

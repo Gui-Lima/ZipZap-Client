@@ -8,10 +8,13 @@ import Client.Connection;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
@@ -40,7 +43,7 @@ public class Chat implements Observer {
     }
 
     public void setMessages(ArrayList<Message> messages){
-        this.messages = messages;
+        this.messages = (ArrayList<Message>) messages.clone();
     }
 
     @FXML public void handleMouseClick(MouseEvent arg0) {
@@ -49,24 +52,21 @@ public class Chat implements Observer {
     }
 
     public void handleDeleteMessageButton(){
-        try {
-            String text = this.selectedMessage.getText();
-            int fromPort = this.selectedMessage.getFromPort();
-            int toPort = this.selectedMessage.getToPort();
-            Status status = this.selectedMessage.getStatus();
-            Message message = new Message(Type.MESSAGE_DELETE, status, fromPort, toPort, text);
-            this.connection.deleteMessage(message);
-            this.removeFromList(message);
-            this.updateMessageList();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (this.selectedMessage.getFromPort() == this.connection.getFromPort()){
+            try {
+                this.selectedMessage.setType(Type.MESSAGE_DELETE);
+                this.connection.deleteMessage(this.selectedMessage);
+                this.messages.remove(this.selectedMessage);
+                this.updateMessageList();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void handleSendMessageToUserButton() {
         String msg = this.MessageTextField.getText();
-        Message message = new Message(Type.MESSAGE_SEND, Status.NOT_SENT,
-                this.connection.getFromPort(), this.connection.getToPort(), msg);
+        Message message = new Message(Type.MESSAGE_SEND, Status.NOT_SENT, this.connection.getFromPort(), this.connection.getToPort(), msg);
         try {
             this.messages.add(message);
             this.updateMessageList();
@@ -84,7 +84,6 @@ public class Chat implements Observer {
 
     @Override
     public void notifyConnectionEstablished(int port) {
-        //System.out.println("algo mudou");
     }
 
     @Override
@@ -92,34 +91,27 @@ public class Chat implements Observer {
 
     }
 
-    public void removeFromList(Message message){
-        int i = 0;
-        for (Message m : this.messages){
-            if(message.getText().equals(m.getText())){
-                break;
-            }
-            i++;
-        }
-        this.messages.remove(i);
-    }
-
     @Override
     public void notifyMessageDeletion(Message message){
         System.out.println("DELETING MESSAGE WOW SUCH WOW MUCH AWESOME");
-        this.removeFromList(message);
+        this.messages.remove(message);
         this.updateMessageList();
     }
 
     @Override
     public void notifyMessageReceived(Message message) {
-        this.printChat();
         this.messages.add(message);
+        this.printChat();
         updateMessageList();
     }
 
     public void updateMessageList(){
-        ObservableList<Message> evt = FXCollections.observableArrayList(this.messages);
-        MessagesListView.setItems(evt);
+        Platform.runLater(
+                () -> {
+                    ObservableList<Message> evt = FXCollections.observableArrayList(this.messages);
+                    MessagesListView.setItems(evt);
+                }
+        );
     }
 
     @FXML private void initialize(){
@@ -128,6 +120,15 @@ public class Chat implements Observer {
             System.out.println("Iniciando a tela do chat");
             this.printChat();
             this.updateMessageList();
+            MessageTextField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent keyEvent) {
+                    if(keyEvent.getCode().equals(KeyCode.ENTER)){
+                        handleSendMessageToUserButton();
+                    }
+                }
+            });
         });
     }
+
 }

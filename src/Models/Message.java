@@ -37,6 +37,16 @@ public class Message {
         return message.toString();
     }
 
+    @Override
+    public boolean equals(Object object){
+        if(object instanceof Message){
+            if(((Message) object).fromPort == this.fromPort && ((Message) object).toPort == this.toPort && ((Message) object).text.equals(this.text)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void setText(String str) {
         this.text = str;
     }
