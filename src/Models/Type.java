@@ -1,9 +1,10 @@
 package Models;
 
-public enum Type {
+public enum Type{
+    MESSAGE_DELETE,
     CONNECT_TO,
     RECEIVE_CONNECTION,
-    MESSAGE,
+    MESSAGE_SEND,
     NOTIFICATION,
     FINISH
 }

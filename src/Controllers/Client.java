@@ -152,6 +152,11 @@ public class Client implements Observer {
     }
 
     @Override
+    public void notifyMessageDeletion(Message message){
+        this.chatStatus.get(message.getFromPort()).remove(message);
+    }
+
+    @Override
     public void notifyMessageReceived(Message message) {
         System.out.println ("The message was " + message);
         System.out.println("I'm adding it to the message queue of the client");

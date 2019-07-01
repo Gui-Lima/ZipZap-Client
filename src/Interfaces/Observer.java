@@ -8,4 +8,6 @@ public interface Observer {
     void notifyUserConnected(int port);
 
     void notifyMessageReceived(Message message);
+
+    void notifyMessageDeletion(Message message);
 }

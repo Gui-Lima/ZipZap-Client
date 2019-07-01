@@ -25,6 +25,10 @@ public class Connection {
         return this.fromPort;
     }
 
+    public void deleteMessage(Message message) throws IOException {
+        this.output.writeUTF(message.toString());
+    }
+
     public void connectToServer() throws IOException {
         socket = new Socket("localhost", SERVER_ADDRESS);
         this.fromPort = socket.getLocalPort();
@@ -68,9 +72,13 @@ public class Connection {
                 System.out.println(" It was a Connection tryout reciever");
                 observer.notifyUserConnected(message.getFromPort());
             }
-            else if(message.getType() == Type.MESSAGE) {
+            else if(message.getType() == Type.MESSAGE_SEND) {
                 System.out.println(" It was a Message to" + observer.toString());
                 observer.notifyMessageReceived(message);
+            }
+            else if(message.getType() == Type.MESSAGE_DELETE){
+                System.out.println("It was a deletion, wow ");
+                observer.notifyMessageDeletion(message);
             }
         }
     }
