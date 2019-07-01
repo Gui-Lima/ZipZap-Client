@@ -34,7 +34,6 @@ public class Chat implements Observer {
     private Connection connection;
     private Message selectedMessage;
     private ArrayList<Message> messages = new ArrayList<>();
-    private Message deletedMessage;
 
     public void printChat(){
         for (Message m : messages){
@@ -48,7 +47,14 @@ public class Chat implements Observer {
 
     @FXML public void handleMouseClick(MouseEvent arg0) {
         System.out.println("clicked on " + MessagesListView.getSelectionModel().getSelectedItem());
-        this.selectedMessage = (Message) MessagesListView.getSelectionModel().getSelectedItem();
+        String selectedMessage = (String) MessagesListView.getSelectionModel().getSelectedItem();
+        for (Message m : this.messages){
+            int id = Integer.valueOf(selectedMessage.substring(selectedMessage.indexOf("(") +1, selectedMessage.indexOf(")")));
+            System.out.println(id);
+            if(m.getId() == id){
+                this.selectedMessage = m;
+            }
+        }
     }
 
     public void handleDeleteMessageButton(){
@@ -108,10 +114,18 @@ public class Chat implements Observer {
     public void updateMessageList(){
         Platform.runLater(
                 () -> {
-                    ObservableList<Message> evt = FXCollections.observableArrayList(this.messages);
+                    ObservableList<String> evt = FXCollections.observableArrayList(transformIntoText(this.messages));
                     MessagesListView.setItems(evt);
                 }
         );
+    }
+
+    public ArrayList<String> transformIntoText(ArrayList<Message> messages){
+        ArrayList<String> textedMessages = new ArrayList<>();
+        for (Message m : messages){
+            textedMessages.add(m.show());
+        }
+        return textedMessages;
     }
 
     @FXML private void initialize(){
