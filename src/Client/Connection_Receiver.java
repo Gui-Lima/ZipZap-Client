@@ -1,5 +1,7 @@
 package Client;
 import Models.Message;
+import Models.Type;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -32,6 +34,9 @@ public class Connection_Receiver implements Runnable {
             try {
                 String me = this.input.readUTF();
                 Message message = new Message(me);
+                if(message.getType() == Type.FINISH){
+                    this.stopped = true;
+                }
                 this.connection.notifySomethingHappened(message);
             } catch (IOException e) {
                 e.printStackTrace();

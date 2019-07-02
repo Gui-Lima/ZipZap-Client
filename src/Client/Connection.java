@@ -5,6 +5,8 @@ import Models.Message;
 import Models.Status;
 import Models.Type;
 import java.io.*;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -12,10 +14,13 @@ public class Connection {
     static final int SERVER_ADDRESS = 9000;
     private Socket socket;
     private DataOutputStream output;
-    private int toPort;
+    private int toPort ;
     private int fromPort;
     private ArrayList<Observer> listeners = new ArrayList<Observer>();
 
+    public Connection(int port){
+        this.fromPort = port;
+    }
 
     public int getToPort() {
         return this.toPort;
@@ -30,7 +35,8 @@ public class Connection {
     }
 
     public void connectToServer() throws IOException {
-        socket = new Socket("localhost", SERVER_ADDRESS);
+        InetAddress inetAddress = InetAddress.getLocalHost();
+        socket = (this.fromPort != 0) ? new Socket("localhost", SERVER_ADDRESS, inetAddress, this.fromPort) :  new Socket("localhost", SERVER_ADDRESS);
         this.fromPort = socket.getLocalPort();
         this.output = new DataOutputStream(socket.getOutputStream());
         Connection_Receiver receiver = new Connection_Receiver(socket, this);
@@ -83,6 +89,10 @@ public class Connection {
             else if(message.getType() == Type.STATUS_UPDATE){
                 System.out.println("We received a status update");
                 observer.notifyStatusUpdate(message);
+            }
+            else if(message.getType() == Type.FINISH){
+                System.out.println("Servidor fechando =(");
+                observer.notifyServerClosed(message);
             }
         }
     }

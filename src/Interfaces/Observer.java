@@ -12,4 +12,6 @@ public interface Observer {
     void notifyMessageDeletion(Message message);
 
     void notifyStatusUpdate(Message message);
+
+    void notifyServerClosed(Message message);
 }

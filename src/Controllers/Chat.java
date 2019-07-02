@@ -144,6 +144,11 @@ public class Chat implements Observer {
     }
 
     @Override
+    public void notifyServerClosed(Message message) {
+
+    }
+
+    @Override
     public void notifyMessageReceived(Message message) {
 
         this.messages.add(message);

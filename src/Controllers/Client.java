@@ -44,7 +44,9 @@ public class Client implements Observer {
 
 
     private void connectToServer() throws IOException {
-        connection = new Connection();
+        int fromPort = 0;
+        if (connection != null) fromPort = connection.getFromPort();
+        connection = new Connection(fromPort);
         connection.addListener(this);
         connection.connectToServer();
     }
@@ -243,6 +245,20 @@ public class Client implements Observer {
             }
         }
         this.printmap();
+    }
+
+    @Override
+    public void notifyServerClosed(Message message) {
+        try {
+            this.connection.disconnectFromServer();
+            Platform.runLater(
+                    this::portAndConnect
+            );
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
