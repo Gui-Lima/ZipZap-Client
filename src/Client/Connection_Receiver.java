@@ -1,14 +1,9 @@
 package Client;
-
-import Interfaces.Observer;
 import Models.Message;
-import Models.Type;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
 
 public class Connection_Receiver implements Runnable {
 

@@ -2,6 +2,8 @@ package Controllers;
 
 import Interfaces.Observer;
 import Models.Message;
+import Models.Status;
+import Models.Type;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,7 +40,7 @@ public class Client implements Observer {
     private ArrayList<String> eventos = new ArrayList<>();
     static final String pathToChat = "../Resources/Chat.fxml";
     private Connection connection;
-
+    private boolean chatOpen = false;
 
 
     private void connectToServer() throws IOException {
@@ -95,7 +97,7 @@ public class Client implements Observer {
             if (StartChatButton.getOpacity() == 1.0) {
                 String port = PortTextField.getText();
                 if (connectToUser(Integer.valueOf(port))) {
-                    this.createChat();
+                    this.createChat(Integer.valueOf(port));
                 }
             }
         }catch (Exception e){
@@ -122,19 +124,71 @@ public class Client implements Observer {
         }
     }
 
-    private void createChat () throws IOException {
+    public void updateMapRemove(Message message, int port){
+        if(!chatStatus.containsKey(port)){
+
+        }
+        else{
+            Message m = new Message(message);
+            m.setText("MENSAGEM APAGADA");
+            this.chatStatus.get(port).set(this.findInList(message, this.connection.getToPort()), m);
+        }
+    }
+
+    public void updateMapAdd(Message message, int port){
+        if(!chatStatus.containsKey(port)){
+            ArrayList<Message> messages = new ArrayList<>();
+            messages.add(message);
+            this.chatStatus.put(port, messages);
+        }
+        else{
+            ArrayList<Message> messages = this.chatStatus.get(port);
+            messages.add(message);
+            this.chatStatus.replace(port, messages);
+        }
+    }
+
+    private void createChat (int port) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(pathToChat));
         Parent root = (Parent)fxmlLoader.load();
         Chat chat = fxmlLoader.<Chat>getController();
         chat.setConnection(this.connection);
+        chat.setParent(this);
         if(this.chatStatus.containsKey(this.connection.getToPort())){
             chat.setMessages(this.chatStatus.get(connection.getToPort()));
         }
+        this.chatOpen = true;
+        this.updateMessageListStatus(port);
         connection.addListener(chat);
         Scene scene = new Scene(root);
         Stage stage = new Stage();
+        stage.setOnHiding( event -> {this.chatOpen = false;} );
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void updateMessageListStatus(int port) {
+        ArrayList<Message> tradedMessagesWithUser = this.chatStatus.get(port);
+        if(tradedMessagesWithUser != null){
+            for (Message m : tradedMessagesWithUser){
+                if(m.getFromPort() == port){
+                    this.sendStatusUpdateMessage(m);
+                }
+            }
+        }
+    }
+
+    private int findInList(Message message, int port){
+        int i =0;
+        if(this.chatStatus.containsKey(port)){
+            for(Message m: this.chatStatus.get(port)){
+                if(m.equals(message)){
+                    return i;
+                }
+                i++;
+            }
+        }
+        return 0;
     }
 
     @Override
@@ -157,17 +211,45 @@ public class Client implements Observer {
 
     @Override
     public void notifyMessageDeletion(Message message){
-        this.chatStatus.get(message.getFromPort()).remove(message);
+        Message m = new Message(message);
+        m.setText("MENSAGEM APAGADA");
+        this.chatStatus.get(message.getFromPort()).set(this.findInList(message, this.connection.getToPort()), m);
     }
 
     @Override
     public void notifyStatusUpdate(Message message) {
+        System.out.println("Received a status update ");
+        this.printmap();
+        int index;
+        if(message.getStatus() == Status.DOUBLE_CHECK_A){
+            index = message.getFromPort();
+        }
+        else{
+            index = message.getToPort();
+        }
+
+        int i =0;
+        boolean found = false;
+        if(this.chatStatus.containsKey(index)){
+            for (Message m : this.chatStatus.get(index)){
+                if (m.getId() == message.getId()){
+                    found = true;
+                    break;
+                }
+                i++;
+            }
+            if (found){
+                this.chatStatus.get(index).set(i, message);
+            }
+        }
+        this.printmap();
     }
 
     @Override
     public void notifyMessageReceived(Message message) {
         System.out.println ("The message was " + message);
         System.out.println("I'm adding it to the message queue of the client");
+        if(this.chatOpen) this.sendStatusUpdateMessage(message);
         if(!chatStatus.containsKey(message.getFromPort())){
             System.out.println("Creating a new Queue since it's the first message to the client from the user");
             ArrayList<Message> messages = new ArrayList<>();
@@ -179,6 +261,17 @@ public class Client implements Observer {
             ArrayList<Message> messages = this.chatStatus.get(message.getFromPort());
             messages.add(message);
             this.chatStatus.replace(message.getFromPort(), messages);
+        }
+    }
+
+    private void sendStatusUpdateMessage(Message message) {
+        try {
+            Message m = new Message(message);
+            m.setStatus(Status.DOUBLE_CHECK_A);
+            m.setType(Type.STATUS_UPDATE);
+            this.connection.sendMessageToUser(m);
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

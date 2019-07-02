@@ -34,6 +34,7 @@ public class Chat implements Observer {
     private Connection connection;
     private Message selectedMessage;
     private ArrayList<Message> messages = new ArrayList<>();
+    private Client parent;
 
     public void printChat(){
         for (Message m : messages){
@@ -62,8 +63,9 @@ public class Chat implements Observer {
             try {
                 this.selectedMessage.setType(Type.MESSAGE_DELETE);
                 this.connection.deleteMessage(this.selectedMessage);
-                this.messages.remove(this.selectedMessage);
+                this.deleteMessage(this.selectedMessage);
                 this.updateMessageList();
+                this.parent.updateMapRemove(this.selectedMessage, this.connection.getToPort());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -72,7 +74,8 @@ public class Chat implements Observer {
 
     public void handleSendMessageToUserButton() {
         String msg = this.MessageTextField.getText();
-        Message message = new Message(Type.MESSAGE_SEND, Status.NOT_SENT, this.connection.getFromPort(), this.connection.getToPort(), msg);
+        Message message = new Message(Type.MESSAGE_SEND, Status.RELOGINHO, this.connection.getFromPort(), this.connection.getToPort(), msg);
+        this.parent.updateMapAdd(message, connection.getToPort());
         try {
             this.messages.add(message);
             this.updateMessageList();
@@ -97,10 +100,29 @@ public class Chat implements Observer {
 
     }
 
+    private int findInList(Message message){
+        int i =0;
+        for(Message m: this.messages){
+            if(m.equals(message)){
+                System.out.println("ACHOU");
+                return i;
+            }
+            i++;
+        }
+        System.out.println("N ACHOU");
+        return 0;
+    }
+
+    private void deleteMessage(Message message){
+        Message m = new Message(message);
+        m.setText("MENSAGEM APAGADA");
+        this.messages.set(this.findInList(message), m);
+    }
+
     @Override
     public void notifyMessageDeletion(Message message){
         System.out.println("DELETING MESSAGE WOW SUCH WOW MUCH AWESOME");
-        this.messages.remove(message);
+        this.deleteMessage(message);
         this.updateMessageList();
     }
 
@@ -115,14 +137,16 @@ public class Chat implements Observer {
             }
             i++;
         }
-        if (found) this.messages.set(i, message);
+        if (found){
+            this.messages.set(i, message);
+        }
         updateMessageList();
     }
 
     @Override
     public void notifyMessageReceived(Message message) {
+
         this.messages.add(message);
-        this.printChat();
         updateMessageList();
     }
 
@@ -160,4 +184,7 @@ public class Chat implements Observer {
         });
     }
 
+    public void setParent(Client parent) {
+        this.parent = parent;
+    }
 }

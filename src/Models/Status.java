@@ -1,8 +1,9 @@
 package Models;
 
 public enum Status {
-    NOT_SENT,
-    SENT,
-    RECEIVED,
-    READ
+    _,
+    RELOGINHO,
+    CHECK_C,
+    DOUBLE_CHECK_C,
+    DOUBLE_CHECK_A
 }

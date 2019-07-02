@@ -1,6 +1,4 @@
 package Models;
-
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Message {
@@ -21,8 +19,18 @@ public class Message {
         this.text = text;
     }
 
+    public Message(Message toClone) {
+        this.id = toClone.id;
+        this.type = toClone.type;
+        this.status = toClone.status;
+        this.fromPort = toClone.fromPort;
+        this.toPort = toClone.toPort;
+        this.text = toClone.text;
+    }
+
     public Message(String encrypt) {
         String[] arr = encrypt.split("<=>");
+
         this.type = Type.valueOf(arr[0]);
         this.status = Status.valueOf(arr[1]);
         this.fromPort = Integer.parseInt(arr[2]);
@@ -46,7 +54,7 @@ public class Message {
     @Override
     public boolean equals(Object object){
         if(object instanceof Message){
-            if(((Message) object).id == this.id && ((Message) object).text.equals(this.text)){
+            if(((Message) object).id == this.id){
                 return true;
             }
         }
@@ -54,9 +62,9 @@ public class Message {
     }
 
     public String show(){
-        return "(" + this.id + ") " + "{" + this.status.toString() + "} " + this.fromPort  + " : " + this.text;
+        return "(" + this.id + ")" + "{" + this.status+ "}"+ this.fromPort  + " : " + this.text;
     }
-    
+
     public void setText(String str) {
         this.text = str;
     }
